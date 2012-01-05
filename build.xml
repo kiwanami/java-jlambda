@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+
+<project name="jlambda" default="compile" basedir=".">
+
+  <target name="all">
+    <antcall target="clean"/>
+    <antcall target="total"/>
+  </target>
+
+  <target name="prepare">
+    <mkdir dir="dest" />
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar jarfile="jlambda.jar" includes="**/*.class" basedir="dest"/>
+  </target>
+
+  <target name="compile" depends="prepare">
+    <javac srcdir="src" destdir="dest" encoding="UTF-8" source="1.5" debug="yes">
+    </javac>
+  </target>
+
+  <target name="compile-sample" depends="compile">
+    <javac srcdir="sample" destdir="sample" encoding="UTF-8" source="1.5" debug="yes">
+      <classpath>
+        <pathelement path="dest"/>
+	  </classpath>
+    </javac>
+  </target>
+
+  <target name="run-sample" depends="compile-sample">
+    <java classname="Sample" fork="true">
+	  <classpath>
+        <pathelement path="dest"/>
+        <pathelement path="sample"/>
+	  </classpath>
+    </java>
+  </target>
+
+  <target name="clean">
+    <delete>
+      <fileset dir="sample" includes="*.class"/>
+      <fileset dir="." includes="*.gz, *.jar"/>
+      <fileset dir="." includes="manifest.txt"/>
+    </delete>
+    <delete dir="dest" />
+  </target>
+
+</project>
